@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>19FC6576-B644-4DDB-8EA0-2C8725F489AC</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Concordance</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>71EB1F13-C862-4285-A11D-202B8C7B534E</key>
+		<string>https://github.com/TomHennen/Concordance.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Concordance/Concordance.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>71EB1F13-C862-4285-A11D-202B8C7B534E</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/TomHennen/Concordance.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>71EB1F13-C862-4285-A11D-202B8C7B534E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>71EB1F13-C862-4285-A11D-202B8C7B534E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Concordance</string>
+		</dict>
+	</array>
+</dict>
+</plist>
