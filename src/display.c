@@ -20,7 +20,11 @@ void displayState(ConcordanceState_t * state)
         printf("%s", entry->word);
         LineNumberEntry_t * lineEntry;
         LL_FOREACH(entry->lines,lineEntry) {
-            printf(" %d", lineEntry->lineNumber);
+            for (size_t lineNumIndex = 0;
+                 lineNumIndex < lineEntry->numberOfLines;
+                 ++lineNumIndex) {
+                printf(" %d", lineEntry->lineNumbers[lineNumIndex]);
+            }
         }
         printf("\n");
     }

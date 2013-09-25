@@ -2,8 +2,11 @@
 #include <stddef.h>
 #include "uthash.h"
 
+static const size_t DEFAULT_NUMBER_OF_LINES = 10;
+
 typedef struct LineNumberEntry {
-    unsigned int lineNumber;
+    unsigned int lineNumbers[DEFAULT_NUMBER_OF_LINES];
+    size_t numberOfLines;
     struct LineNumberEntry * next;
 } LineNumberEntry_t;
 

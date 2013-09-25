@@ -11,14 +11,22 @@
  */
 int stateAddLineNumberToEntry(ConcordanceEntry_t * entry, unsigned int lineNumber)
 {
-    LineNumberEntry_t * lineEntry = malloc(sizeof(LineNumberEntry_t));
-    if (!lineEntry) {
-        printf("- stateAddLineNumberToEntry could not allocate LineNumberEntry\n");
-        return -1;
+    LineNumberEntry_t * lineEntry = NULL;
+    if (entry->lines == NULL || entry->lines->numberOfLines == DEFAULT_NUMBER_OF_LINES) {
+        // we need a new number entry
+        lineEntry = malloc(sizeof(LineNumberEntry_t));
+        if (!lineEntry) {
+            printf("- stateAddLineNumberToEntry could not allocate LineNumberEntry\n");
+            return -1;
+        }
+        memset(lineEntry, 0, sizeof(LineNumberEntry_t));
+        LL_APPEND(entry->lines, lineEntry);
+    } else {
+        lineEntry = entry->lines;
     }
-    memset(lineEntry, 0, sizeof(LineNumberEntry_t));
-    lineEntry->lineNumber = lineNumber;
-    LL_APPEND(entry->lines, lineEntry);
+    
+    lineEntry->lineNumbers[lineEntry->numberOfLines++] = lineNumber;
+    
     return 0;
 }
 
