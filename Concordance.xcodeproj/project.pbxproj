@@ -30,7 +30,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "";
+			buildWorkingDirectory = /Users/Tom/development/Concordance;
 			dependencies = (
 			);
 			name = Concordance;
