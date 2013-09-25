@@ -66,5 +66,15 @@ void stateDelete(ConcordanceState_t * state)
         printf("- stateDelete: state is NULL\n");
         return;
     }
+    
+    // iterate through all the entries and free them
+    ConcordanceEntry_t * tmpEntry = NULL;
+    ConcordanceEntry_t * curEntry = NULL;
+    HASH_ITER(hh, state->table, curEntry, tmpEntry) {
+        HASH_DEL(state->table, curEntry);
+        free(curEntry->word);
+        free(curEntry);
+    }
+    
     free(state);
 }
