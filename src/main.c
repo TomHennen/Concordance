@@ -7,6 +7,7 @@
 
 int main(int argc, char* argv[])
 {
+    int result = 0;
     if (argc != 2) {
         printf("usage: %s <filename>\n", argv[0]);
         return -1;
@@ -17,13 +18,15 @@ int main(int argc, char* argv[])
         return -2;
     }
     
-    int result = processFile(argv[1], state);
-    if (result) {
-        printf("- Error processing file (%d)\n", result);
-        return -3;
+    int processResult = processFile(argv[1], state);
+    if (processResult) {
+        printf("- Error processing file (%d)\n", processResult);
+        result = -3;
+        goto cleanup;
     }
     displayState(state);
     
+cleanup:
     stateDelete(state);
     printf("+ done\n");
     return 0;

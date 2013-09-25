@@ -1,11 +1,50 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <string.h>
+#include "uthash.h"
 #include "process.h"
 
 const unsigned int MAX_LINE_LENGTH = 1024;
 // these are the tokens we'll use to split words in a line
-const char * TOKENS = " .;:,+\"'!?@#$%^&*()={}|~<>\\/-";
+const char * TOKENS = " .;:,+\"'!?@#$%^&*()={}|~<>\\/-\n";
+
+/**
+ Handles adding the word to the concordance information
+ @param word the word to add, this function may modify the buffer
+ @param lineNumber the line number the word appeared on
+ @param state the map of words to lines
+ @return 0 on success, other on error
+ */
+static int processWord(char * word,
+                       unsigned int lineNumber,
+                       ConcordanceState_t * state)
+{
+    ConcordanceEntry_t * wordEntry = NULL;
+    char * wordCopy = NULL;
+    printf("+ processWord word: [%s]\n", word);
+
+    // we don't care about case, let's get rid of it
+    size_t wordLength = strlen(word);
+    for (size_t i = 0; i < wordLength; ++i) {
+        word[i] = tolower(word[i]);
+    }
+    
+    // we need to check to see if the word is already present
+    // adding it if it isn't
+    // then we need to add the line number
+    HASH_FIND_STR(state->table, word, wordEntry);
+    if (!wordEntry) {
+        printf("+ processWord adding %s\n", word);
+        // no such entry exists yet, add it
+        wordEntry = stateAddWord(word, wordLength, state);
+        if (!wordEntry) {
+            printf("- processWord couldn't add word\n");
+            return -1;
+        }
+    }
+    return 0;
+}
 
 /**
  Processes the line adding any concordance information to the state.
@@ -47,8 +86,14 @@ static int processLine(char * line,
         // overwriting an existing null terminator
         remainingLine[wordEndIndex] = '\0';
         char * word = &remainingLine[wordStartIndex];
-        printf("+ processLine word: %s\n", word);
-
+        
+        // if the word is zero length that just means
+        // we probably had two tokens next to each other
+        if (strlen(word) > 0) {
+            // handle the word
+            processWord(word, lineNumber, state);
+        }
+        
         if (!done) {
             // we don't want to do this if we're one since we'll
             // access memory that isn't ours (potentially)

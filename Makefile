@@ -1,5 +1,7 @@
-CFLAGS=-Iuthash/src -I.
+CFLAGS=-g -Iuthash/src -I.
 SRCDIR=src
+
+all: concordance
 
 run: concordance
 	./$^ data/test1.txt
