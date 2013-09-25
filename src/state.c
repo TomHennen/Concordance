@@ -3,6 +3,12 @@
 #include <ctype.h>
 #include "state.h"
 
+/**
+ @param word the word to add
+ @param wordLength the length of the word
+ @param state the map to add the word to
+ @return the entry added for that word in the map
+ */
 ConcordanceEntry_t * stateAddWord(const char * word, size_t wordLength, ConcordanceState_t * state)
 {
     int result = 0;
@@ -41,6 +47,9 @@ error:
     return NULL;
 }
 
+/**
+ @return the state, must be destroyed with stateDelete
+ */
 ConcordanceState_t * stateCreate()
 {
     ConcordanceState_t * state = (ConcordanceState_t*)malloc(sizeof(ConcordanceState_t));
@@ -48,6 +57,9 @@ ConcordanceState_t * stateCreate()
     return state;
 }
 
+/**
+ @param state the state to delete
+ */
 void stateDelete(ConcordanceState_t * state)
 {
     if (!state) {
