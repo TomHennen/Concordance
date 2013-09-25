@@ -7,7 +7,7 @@
 
 const unsigned int MAX_LINE_LENGTH = 1024;
 // these are the tokens we'll use to split words in a line
-const char * TOKENS = " .;:,+\"'!?@#$%^&*()={}|~<>\\/-\n";
+const char * TOKENS = " .;:,+\"'!?@#$%^&*()={}[]|~<>\\/-_\n";
 
 /**
  Handles adding the word to the concordance information
@@ -26,6 +26,12 @@ static int processWord(char * word,
     // we don't care about case, let's get rid of it
     size_t wordLength = strlen(word);
     for (size_t i = 0; i < wordLength; ++i) {
+        if (!isprint(word[i])) {
+            printf("Could not print 0x%x for %s\n", (int)word[i], word);
+            printf("!!!!\n");
+            word[i] = '*';
+            //return -1;
+        }
         word[i] = tolower(word[i]);
     }
     
@@ -52,6 +58,21 @@ static int processWord(char * word,
 }
 
 /**
+ Replaces any unprintable characters in 'line' with a ' '
+ (which winds up making the unprintable characters tokens)
+ @param line the line to clean up
+ @param lineLength the length of the line
+ */
+static void preprocessLine(char * line, size_t lineLength)
+{
+    for (size_t i = 0; i < lineLength; ++i) {
+        if (!isprint(line[i])) {
+            line[i] = ' ';
+        }
+    }
+}
+
+/**
  Processes the line adding any concordance information to the state.
  
  @param line a null terminated string that may get modified
@@ -69,6 +90,9 @@ static int processLine(char * line,
     char * remainingLine = line;
     size_t lineLength = strlen(line);
 
+    // preprocess the line to get rid of any bad characters
+    preprocessLine(line, lineLength);
+    
     bool done = false;
     while (!done) {
         // this will give us the index of the first token
@@ -94,7 +118,11 @@ static int processLine(char * line,
         // we probably had two tokens next to each other
         if (strlen(word) > 0) {
             // handle the word
-            processWord(word, lineNumber, state);
+            int result = processWord(word, lineNumber, state);
+            if (result) {
+                printf("- processLine could not process word [%s] on line %d\n", word, lineNumber);
+                return result;
+            }
         }
         
         if (!done) {

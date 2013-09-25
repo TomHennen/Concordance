@@ -16,6 +16,7 @@ int stateAddLineNumberToEntry(ConcordanceEntry_t * entry, unsigned int lineNumbe
         printf("- stateAddLineNumberToEntry could not allocate LineNumberEntry\n");
         return -1;
     }
+    memset(lineEntry, 0, sizeof(LineNumberEntry_t));
     lineEntry->lineNumber = lineNumber;
     LL_APPEND(entry->lines, lineEntry);
     return 0;
@@ -33,7 +34,7 @@ ConcordanceEntry_t * stateAddWord(const char * word, size_t wordLength, Concorda
     
     // first allocate space for our entry
     // both the word and the entry for it
-    char * wordCopy = malloc(wordLength);
+    char * wordCopy = malloc(wordLength + 1);
     if (!wordCopy) {
         printf("- stateAddWord could not allocate word copy\n");
         result = -1;
@@ -46,6 +47,7 @@ ConcordanceEntry_t * stateAddWord(const char * word, size_t wordLength, Concorda
         result =  -2;
         goto error;
     }
+    memset(wordEntry, 0, sizeof(ConcordanceEntry_t));
     
     // now that it's all set up, add it to the table
     wordEntry->word = wordCopy;
