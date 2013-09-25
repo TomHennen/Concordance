@@ -28,6 +28,5 @@ int main(int argc, char* argv[])
     
 cleanup:
     stateDelete(state);
-    printf("+ done\n");
     return 0;
 }

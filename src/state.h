@@ -2,9 +2,14 @@
 #include <stddef.h>
 #include "uthash.h"
 
+typedef struct LineNumberEntry {
+    unsigned int lineNumber;
+    struct LineNumberEntry * next;
+} LineNumberEntry_t;
+
 typedef struct ConcordanceEntry {
     char * word;
-    int placeholder;
+    LineNumberEntry_t * lines;
     UT_hash_handle hh;
 } ConcordanceEntry_t;
 
@@ -15,3 +20,5 @@ typedef struct ConcordanceState {
 ConcordanceState_t * stateCreate();
 void stateDelete(ConcordanceState_t * state);
 ConcordanceEntry_t * stateAddWord(const char * word, size_t wordLength, ConcordanceState_t * state);
+int stateAddLineNumberToEntry(ConcordanceEntry_t * entry, unsigned int lineNumber);
+

@@ -1,6 +1,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "utlist.h"
 #include "display.h"
 
 int word_sort(ConcordanceEntry_t * a, ConcordanceEntry_t * b)
@@ -15,7 +16,13 @@ void displayState(ConcordanceState_t * state)
     for(ConcordanceEntry_t * entry = state->table;
         entry != NULL;
         entry = (ConcordanceEntry_t*)(entry->hh.next)) {
-        printf("word: %s\n", entry->word);
+        
+        printf("%s", entry->word);
+        LineNumberEntry_t * lineEntry;
+        LL_FOREACH(entry->lines,lineEntry) {
+            printf(" %d", lineEntry->lineNumber);
+        }
+        printf("\n");
     }
     
     return;

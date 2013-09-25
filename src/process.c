@@ -22,7 +22,6 @@ static int processWord(char * word,
 {
     ConcordanceEntry_t * wordEntry = NULL;
     char * wordCopy = NULL;
-    printf("+ processWord word: [%s]\n", word);
 
     // we don't care about case, let's get rid of it
     size_t wordLength = strlen(word);
@@ -35,13 +34,19 @@ static int processWord(char * word,
     // then we need to add the line number
     HASH_FIND_STR(state->table, word, wordEntry);
     if (!wordEntry) {
-        printf("+ processWord adding %s\n", word);
         // no such entry exists yet, add it
         wordEntry = stateAddWord(word, wordLength, state);
         if (!wordEntry) {
             printf("- processWord couldn't add word\n");
             return -1;
         }
+    }
+    
+    // now we have an entry, we just have to add the line number
+    int result = stateAddLineNumberToEntry(wordEntry, lineNumber);
+    if (result) {
+        printf("- processWord could not add line number (%d)\n", result);
+        return result;
     }
     return 0;
 }
@@ -58,8 +63,6 @@ static int processLine(char * line,
                         unsigned int lineNumber,
                         ConcordanceState_t * state)
 {
-    printf("+ processLine line [%4d]: %s\n", lineNumber, line);
-    
     // go through each word in the line
     size_t wordEndIndex = 0;
     size_t wordStartIndex = 0;
@@ -118,8 +121,6 @@ static int processLine(char * line,
 int processFile(const char * filename,
                                  ConcordanceState_t * state)
 {
-    printf("+ Processing %s\n", filename);
-    
     FILE * file = fopen(filename, "r");
     if (!file) {
         printf("- Could not open file\n");
