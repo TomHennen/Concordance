@@ -18,7 +18,7 @@ int stateAddLineNumberToEntry(ConcordanceEntry_t * entry, unsigned int lineNumbe
     }
     memset(lineEntry, 0, sizeof(LineNumberEntry_t));
     lineEntry->lineNumber = lineNumber;
-    LL_APPEND(entry->lines, lineEntry);
+    DL_APPEND(entry->lines, lineEntry);
     return 0;
 }
 
@@ -96,8 +96,8 @@ void stateDelete(ConcordanceState_t * state)
         HASH_DEL(state->table, curEntry);
         
         // now delete the line info
-        LL_FOREACH_SAFE(curEntry->lines, curLineEntry, tmpLineEntry) {
-            LL_DELETE(curEntry->lines, curLineEntry);
+        DL_FOREACH_SAFE(curEntry->lines, curLineEntry, tmpLineEntry) {
+            DL_DELETE(curEntry->lines, curLineEntry);
             free(curLineEntry);
         }
         

@@ -5,6 +5,7 @@
 typedef struct LineNumberEntry {
     unsigned int lineNumber;
     struct LineNumberEntry * next;
+    struct LineNumberEntry * prev;
 } LineNumberEntry_t;
 
 typedef struct ConcordanceEntry {
