@@ -11,6 +11,10 @@
  */
 int stateAddLineNumberToEntry(ConcordanceEntry_t * entry, unsigned int lineNumber)
 {
+    if (!entry) {
+        printf("- stateAddLineNumberToEntry: entry is null\n");
+        return -2;
+    }
     LineNumberEntry_t * lineEntry = malloc(sizeof(LineNumberEntry_t));
     if (!lineEntry) {
         printf("- stateAddLineNumberToEntry could not allocate LineNumberEntry\n");
@@ -30,21 +34,23 @@ int stateAddLineNumberToEntry(ConcordanceEntry_t * entry, unsigned int lineNumbe
  */
 ConcordanceEntry_t * stateAddWord(const char * word, size_t wordLength, ConcordanceState_t * state)
 {
-    int result = 0;
+    if (!word || !state) {
+        printf("- stateAddLineNumberToEntry: entry is null\n");
+        return NULL;
+    }
     
     // first allocate space for our entry
     // both the word and the entry for it
     char * wordCopy = malloc(wordLength + 1);
     if (!wordCopy) {
         printf("- stateAddWord could not allocate word copy\n");
-        result = -1;
         goto error;
     }
     strncpy(wordCopy, word, wordLength);
+    
     ConcordanceEntry_t * wordEntry = malloc(sizeof(ConcordanceEntry_t));
     if (!wordEntry) {
         printf("- stateAddWord could not allocate word entry\n");
-        result =  -2;
         goto error;
     }
     memset(wordEntry, 0, sizeof(ConcordanceEntry_t));
@@ -73,6 +79,11 @@ error:
 ConcordanceState_t * stateCreate()
 {
     ConcordanceState_t * state = (ConcordanceState_t*)malloc(sizeof(ConcordanceState_t));
+    if (!state) {
+        printf("- stateCreate: could not allocate state\n");
+        return NULL;
+    }
+    
     memset(state, 0, sizeof(ConcordanceState_t));
     return state;
 }

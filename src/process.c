@@ -7,10 +7,14 @@
 
 const unsigned int MAX_LINE_LENGTH = 1024;
 // these are the tokens we'll use to split words in a line
-const char * TOKENS = " .;:,+\"'!?@#$%^&*()={}[]|~<>\\/-_\n";
+// don't include "'" since it could be a contraction
+const char * TOKENS = " .;:,+\"`!?@#$%^&*()={}[]|~<>\\/-_\n";
 
 /**
  Handles adding the word to the concordance information
+ 
+ 
+ 
  @param word the word to add, this function may modify the buffer
  @param lineNumber the line number the word appeared on
  @param state the map of words to lines
@@ -20,18 +24,17 @@ static int processWord(char * word,
                        unsigned int lineNumber,
                        ConcordanceState_t * state)
 {
+    if (!word || !state) {
+        printf("- processWord: null word or state\n");
+        return -2;
+    }
+    
     ConcordanceEntry_t * wordEntry = NULL;
     char * wordCopy = NULL;
 
     // we don't care about case, let's get rid of it
     size_t wordLength = strlen(word);
     for (size_t i = 0; i < wordLength; ++i) {
-        if (!isprint(word[i])) {
-            printf("Could not print 0x%x for %s\n", (int)word[i], word);
-            printf("!!!!\n");
-            word[i] = '*';
-            //return -1;
-        }
         word[i] = tolower(word[i]);
     }
     
@@ -43,7 +46,7 @@ static int processWord(char * word,
         // no such entry exists yet, add it
         wordEntry = stateAddWord(word, wordLength, state);
         if (!wordEntry) {
-            printf("- processWord couldn't add word\n");
+            printf("- processWord: couldn't add word\n");
             return -1;
         }
     }
@@ -51,7 +54,7 @@ static int processWord(char * word,
     // now we have an entry, we just have to add the line number
     int result = stateAddLineNumberToEntry(wordEntry, lineNumber);
     if (result) {
-        printf("- processWord could not add line number (%d)\n", result);
+        printf("- processWord: could not add line number (%d)\n", result);
         return result;
     }
     return 0;
@@ -61,10 +64,15 @@ static int processWord(char * word,
  Replaces any unprintable characters in 'line' with a ' '
  (which winds up making the unprintable characters tokens)
  @param line the line to clean up
- @param lineLength the length of the line
  */
-static void preprocessLine(char * line, size_t lineLength)
+static void preprocessLine(char * line)
 {
+    if (!line) {
+        printf("- preprocessLine: line is NULL\n");
+        return;
+    }
+    
+    size_t lineLength = strlen(line);
     for (size_t i = 0; i < lineLength; ++i) {
         if (!isprint(line[i])) {
             line[i] = ' ';
@@ -81,18 +89,25 @@ static void preprocessLine(char * line, size_t lineLength)
  @return 0 on success, other on error
  */
 static int processLine(char * line,
-                        unsigned int lineNumber,
-                        ConcordanceState_t * state)
+                       unsigned int lineNumber,
+                       ConcordanceState_t * state)
 {
-    // go through each word in the line
+    if (!line || !state) {
+        printf("- processLine: line or state is null\n");
+        return -1;
+    }
+    
+    // the index at which the current word ends
     size_t wordEndIndex = 0;
+    // the index at which the current word starts
     size_t wordStartIndex = 0;
+    // a pointer to the what has yet to be processed in the line
     char * remainingLine = line;
-    size_t lineLength = strlen(line);
 
     // preprocess the line to get rid of any bad characters
-    preprocessLine(line, lineLength);
-    
+    preprocessLine(line);
+
+    // go through each word in the line
     bool done = false;
     while (!done) {
         // this will give us the index of the first token
@@ -147,11 +162,16 @@ static int processLine(char * line,
  @return 0 on success, other on error
  */
 int processFile(const char * filename,
-                                 ConcordanceState_t * state)
+                ConcordanceState_t * state)
 {
+    if (!filename || !state) {
+        printf("- processFile: filename or state is null\n");
+        return -3;
+    }
+    
     FILE * file = fopen(filename, "r");
     if (!file) {
-        printf("- Could not open file\n");
+        printf("- processFile: Could not open file\n");
         return -1;
     }
     

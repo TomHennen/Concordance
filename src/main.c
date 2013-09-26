@@ -12,6 +12,7 @@ int main(int argc, char* argv[])
         printf("usage: %s <filename>\n", argv[0]);
         return -1;
     }
+    
     ConcordanceState_t * state = stateCreate();
     if (!state) {
         printf("- Could not create state\n");
