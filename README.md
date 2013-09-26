@@ -18,4 +18,6 @@ It also assumes that ' is not a delimiter (as it can be used in words with contr
 
 The program does consider numbers to be words.
 
-Apart from ', the program removes all punctuation.
+Apart from ', the program removes all punctuation and unprintable characters.
+
+The program does not currently support Unicode.
