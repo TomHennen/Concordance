@@ -11,16 +11,12 @@ Usage
 
 Assumptions
 -----------
-The program assumes that hyphens delimit words, so 'mother-in-law' is treated as three
-distinct words.
-
-It also assumes that ' is not a delimiter (as it can be used in words with contractions).
-
-The program does consider numbers to be words.
-
-Apart from ', the program removes all punctuation and unprintable characters.
-
-The program does not currently support Unicode.
+* That hyphens delimit words, so 'mother-in-law' is treated as three distinct words
+* That ' is not a delimiter (as it can be used in words with contractions)
+* That groups of digits are words
+* Apart from ', the program removes all punctuation and unprintable characters.
+* That all input files are ASCII (or will be interpreted as ASCII)
+* That lines are limited to 1024 characters in length
 
 Files
 -----
