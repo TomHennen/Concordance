@@ -5,9 +5,9 @@ followed by a list of lines that word appears on.
 
 Usage
 -----
-<pre>
+''''
 ./concordance <filename>
-</pre>
+''''
 
 Assumptions
 -----------
