@@ -6,6 +6,7 @@
 #include "uthash.h"
 #include "process.h"
 
+// the maximum number of characters we expect to be in a line
 const unsigned int MAX_LINE_LENGTH = 1024;
 // these are the tokens we'll use to split words in a line
 // don't include "'" since it could be a contraction

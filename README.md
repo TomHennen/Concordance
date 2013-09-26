@@ -17,6 +17,7 @@ Assumptions
 * Apart from ', the program removes all punctuation and unprintable characters.
 * That all input files are ASCII (or will be interpreted as ASCII)
 * That lines are limited to 1024 characters in length
+* That words that appear multiple times on the same line will have that line listed multiple times for that word
 
 Files
 -----

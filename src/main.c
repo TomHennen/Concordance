@@ -20,10 +20,10 @@
     size.
  
  where:
-     P is the average length of a line
-     L is the number of lines
-     K is the number of unique words
-     W is the average length of a word
+    P is the average length of a line
+    L is the number of lines
+    K is the number of unique words
+    W is the average length of a word
  */
 int main(int argc, char* argv[])
 {
@@ -55,5 +55,5 @@ cleanup:
     // though we could technically just exit and let the OS deal with this
     // it'll free the memory for us
     stateDelete(state);
-    return 0;
+    return result;
 }
