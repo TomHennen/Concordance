@@ -20,7 +20,7 @@ Assumptions
 
 Files
 -----
-main.c - handles command line parameters and driving the rest of the program
-display.c - handles displaying the information to the user
-process.c - handles reading a file in to our data structure
-state.c - handles basic management of the data structure
+* main.c - handles command line parameters and driving the rest of the program
+* display.c - handles displaying the information to the user
+* process.c - handles reading a file in to our data structure
+* state.c - handles basic management of the data structure
