@@ -29,7 +29,8 @@ int word_sort(ConcordanceEntry_t * a, ConcordanceEntry_t * b)
  Displays the words in sorted order, which each word followed
  by a list of the lines it occurs on
  
- O(K * L) where K is the number of unique words in the document
+ O(K * L + K log K) = O(K * (L + log K)
+          where K is the number of unique words in the document
           and L is the number of lines in the document.
  
  @param state the state that contains the mapping

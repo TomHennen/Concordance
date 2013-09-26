@@ -8,7 +8,7 @@
 /**
  Runs concordance
  
- O(P * L + 2(K * L))        (may be able to reduce this further, my algebra is rusty)
+ O(P * L + 2(K * L) + K * log K)
  where:
         P is the average length of a line
         L is the number of lines
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
         result = -3;
         goto cleanup;
     }
-    // O(K * L)
+    // O(K * (L + log K)
     displayState(state);
     
 cleanup:
