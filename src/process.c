@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <assert.h>
 #include "uthash.h"
 #include "process.h"
 
@@ -13,14 +14,16 @@ const char * TOKENS = " .;:,+\"`!?@#$%^&*()={}[]|~<>\\/-_\n";
 /**
  Handles adding the word to the concordance information
  
- 
+ O(W) where W is the length of the word
  
  @param word the word to add, this function may modify the buffer
+ @param wordLength the number of characters in word
  @param lineNumber the line number the word appeared on
  @param state the map of words to lines
  @return 0 on success, other on error
  */
 static int processWord(char * word,
+                       size_t wordLength,
                        unsigned int lineNumber,
                        ConcordanceState_t * state)
 {
@@ -33,7 +36,7 @@ static int processWord(char * word,
     char * wordCopy = NULL;
 
     // we don't care about case, let's get rid of it
-    size_t wordLength = strlen(word);
+    // O(W)
     for (size_t i = 0; i < wordLength; ++i) {
         word[i] = tolower(word[i]);
     }
@@ -41,9 +44,11 @@ static int processWord(char * word,
     // we need to check to see if the word is already present
     // adding it if it isn't
     // then we need to add the line number
+    // this should be O(1), though really O(W) since it needs to strcmp the word
     HASH_FIND_STR(state->table, word, wordEntry);
     if (!wordEntry) {
         // no such entry exists yet, add it
+        // O(W)
         wordEntry = stateAddWord(word, wordLength, state);
         if (!wordEntry) {
             printf("- processWord: couldn't add word\n");
@@ -52,6 +57,7 @@ static int processWord(char * word,
     }
     
     // now we have an entry, we just have to add the line number
+    // O(1)
     int result = stateAddLineNumberToEntry(wordEntry, lineNumber);
     if (result) {
         printf("- processWord: could not add line number (%d)\n", result);
@@ -62,6 +68,10 @@ static int processWord(char * word,
 
 /**
  Replaces any unprintable characters in 'line' with a ' '
+ 
+ O(P) where P is the length of the line (capped at 1024 here,
+      so could say O(1), but if we went to unlimited lines...)
+ 
  (which winds up making the unprintable characters tokens)
  @param line the line to clean up
  */
@@ -72,8 +82,9 @@ static void preprocessLine(char * line)
         return;
     }
     
-    size_t lineLength = strlen(line);
-    for (size_t i = 0; i < lineLength; ++i) {
+    // O(L)
+    for (size_t i = 0; line[i] != '\0'; ++i) {
+        // O(1)
         if (!isprint(line[i])) {
             line[i] = ' ';
         }
@@ -82,6 +93,8 @@ static void preprocessLine(char * line)
 
 /**
  Processes the line adding any concordance information to the state.
+ 
+ O(P) where P is the length of the line
  
  @param line a null terminated string that may get modified
  @param lineNumber the line number the line appears on
@@ -105,14 +118,21 @@ static int processLine(char * line,
     char * remainingLine = line;
 
     // preprocess the line to get rid of any bad characters
+    // O(L)
     preprocessLine(line);
 
     // go through each word in the line
+    // O(L) since we have to look at each character
     bool done = false;
     while (!done) {
         // this will give us the index of the first token
         // that occurs within the line, we actually don't
         // care which token it is
+        //
+        // The O cost here can be amortized away, it takes
+        // time, but it reduces the number of times through
+        // the loop.  So it's really O(T), but the number
+        // of tokens is constant, so we can ignore it.
         wordEndIndex = strcspn(remainingLine, TOKENS);
         
         if (remainingLine[wordEndIndex] == '\0') {
@@ -131,9 +151,13 @@ static int processLine(char * line,
         
         // if the word is zero length that just means
         // we probably had two tokens next to each other
-        if (strlen(word) > 0) {
+        size_t wordLength = wordEndIndex - wordStartIndex;
+        assert(strlen(word) == wordLength);
+        if (wordLength > 0) {
             // handle the word
-            int result = processWord(word, lineNumber, state);
+            // O(W), which is really just a part of O(L) so again, we can ignore it as
+            // we're already counting O(L)
+            int result = processWord(word, wordLength, lineNumber, state);
             if (result) {
                 printf("- processLine could not process word [%s] on line %d\n", word, lineNumber);
                 return result;
@@ -157,6 +181,9 @@ static int processLine(char * line,
  
  The file is assumed to be ASCII and have lines no longer than
  MAX_LINE_LENGTH
+ 
+ O(L * P) where L is the number of lines and P is the average line length
+ 
  @param filename The file to process
  @param state the concordance state that will be updated
  @return 0 on success, other on error
@@ -183,7 +210,9 @@ int processFile(const char * filename,
     // grab each line in the file,
     // NOTE: we won't detect a line that exceeds the MAX_LINE_LENGTH
     // but we could with some extra work.
+    // O(L) where L is the number of lines
     while (fgets(lineBuffer, MAX_LINE_LENGTH, file) != NULL) {
+        // O(P)
         int processResult = processLine(lineBuffer, lineNumber, state);
         if (processResult) {
             printf("- processFile: error processing line (%d)\n", processResult);

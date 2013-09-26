@@ -5,6 +5,10 @@
 #include "state.h"
 
 /**
+ Add the line number to the provided entry
+ 
+ O(1) (assuming malloc is O(1) also)
+ 
  @param entry the entry to add the line number to
  @param lineNumber the line number to add to the entry
  @return 0 on success, other on error
@@ -27,6 +31,10 @@ int stateAddLineNumberToEntry(ConcordanceEntry_t * entry, unsigned int lineNumbe
 }
 
 /**
+ Adds the specified word to the state, returning it's entry.
+ 
+ O(W) (where W is the length of the word)
+ 
  @param word the word to add
  @param wordLength the length of the word
  @param state the map to add the word to
@@ -58,6 +66,8 @@ ConcordanceEntry_t * stateAddWord(const char * word, size_t wordLength, Concorda
     // now that it's all set up, add it to the table
     wordEntry->word = wordCopy;
     wordEntry->lines = NULL;
+    
+    // this should be O(1)
     HASH_ADD_KEYPTR(hh, state->table, wordCopy, wordLength, wordEntry);
 
     return wordEntry;
@@ -74,6 +84,10 @@ error:
 }
 
 /**
+ Creates the state we're going to store all our information in.
+ 
+ O(1) assuming malloc is O(1)
+ 
  @return the state, must be destroyed with stateDelete
  */
 ConcordanceState_t * stateCreate()
@@ -89,6 +103,10 @@ ConcordanceState_t * stateCreate()
 }
 
 /**
+ Deletes the provided state, freeing anything it points to
+ 
+ O(K * L) (where K is the number of unique words and L is the number of lines)
+ 
  @param state the state to delete
  */
 void stateDelete(ConcordanceState_t * state)
@@ -107,6 +125,7 @@ void stateDelete(ConcordanceState_t * state)
         HASH_DEL(state->table, curEntry);
         
         // now delete the line info
+        // O(L) since worst case each word will appear on each line
         DL_FOREACH_SAFE(curEntry->lines, curLineEntry, tmpLineEntry) {
             DL_DELETE(curEntry->lines, curLineEntry);
             free(curLineEntry);
