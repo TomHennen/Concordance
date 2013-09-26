@@ -21,3 +21,10 @@ The program does consider numbers to be words.
 Apart from ', the program removes all punctuation and unprintable characters.
 
 The program does not currently support Unicode.
+
+Files
+-----
+main.c - handles command line parameters and driving the rest of the program
+display.c - handles displaying the information to the user
+process.c - handles reading a file in to our data structure
+state.c - handles basic management of the data structure

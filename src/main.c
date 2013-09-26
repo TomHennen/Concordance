@@ -8,11 +8,22 @@
 /**
  Runs concordance
  
+ Time Complexity
  O(P * L + 2(K * L) + K * log K)
+ O(P * L + 3K(L + log K))
+ O(P * L + K(L + log K))
+ 
+ Space complexity
+ O(K * L * W)
+    Our only allocated space is in the ConcordanceState_t structure
+    The rest is stack. We don't have any recursion, so that's a finite
+    size.
+ 
  where:
-        P is the average length of a line
-        L is the number of lines
-        K is the number of unique words
+     P is the average length of a line
+     L is the number of lines
+     K is the number of unique words
+     W is the average length of a word
  */
 int main(int argc, char* argv[])
 {
