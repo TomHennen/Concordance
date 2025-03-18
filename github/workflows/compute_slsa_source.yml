@@ -1,0 +1,13 @@
+
+name: SLSA Source
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  # Whenever new source is pushed recompute the slsa source information.
+  check-change:
+    permissions:
+      contents: write # needed for storing the vsa in the repo.
+      id-token: write
+    uses: slsa-framework/slsa-source-poc/.github/workflows/compute_slsa_source.yml@main
