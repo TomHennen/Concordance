@@ -25,3 +25,7 @@ Files
 * display.c - handles displaying the information to the user
 * process.c - handles reading a file in to our data structure
 * state.c - handles basic management of the data structure
+
+Notes
+-----
+This repo is now being used to test https://github.com/slsa-framework/slsa-source-poc.
